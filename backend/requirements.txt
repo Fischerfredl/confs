@@ -1,4 +1,9 @@
 Flask==1.0.2
-requests==2.18.4
+Flask-CORS==3.0.6
 flask-json-errorhandler==1.0.3
+icalendar==4.0.1
+redis==2.10.6
+requests==2.19.1
+
+# production
 gunicorn==19.8.1

@@ -4,6 +4,9 @@ services:
   backend:
     restart: always
     build: ./backend
+    environment:
+      - REDIS_HOST=redis
+      - CACHE_SECONDS=14400  # 4 hours
 
   web:
     restart: always
@@ -17,3 +20,7 @@ services:
     depends_on:
       - web
       - backend
+
+  redis:
+    restart: always
+    image: redis:4-alpine
