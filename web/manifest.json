@@ -1,6 +1,6 @@
 {
   "name": "confs.muperfredi",
-  "short_name": "confs.muperfredi",
+  "short_name": "muperconfs",
   "description": "Tech conferences visualisation and calendar feed",
   "start_url": "/",
   "display": "standalone",
