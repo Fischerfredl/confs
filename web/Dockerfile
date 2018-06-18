@@ -1,9 +1,19 @@
-FROM node:10-alpine
+FROM node:8-alpine
 
-COPY . /srv
-WORKDIR /srv
+RUN mkdir /app
+WORKDIR /app
+
+# early install of dependencies
+COPY package.json /app
 RUN npm install
 
-WORKDIR /srv/server
+# copy contents
+COPY . /app
+
+# build
+RUN npm run build
+
+# start server
+WORKDIR /app/server
 RUN npm install
 CMD npm start
