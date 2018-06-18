@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  backend:
+    restart: always
+    build: ./backend
+
+  web:
+    restart: always
+    build: ./web
+
+  rev-proxy:
+    restart: always
+    build: ./rev-proxy
+    ports:
+      - 5000:80
+    depends_on:
+      - web
+      - backend

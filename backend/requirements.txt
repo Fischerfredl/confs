@@ -1,0 +1,4 @@
+Flask==1.0.2
+requests==2.18.4
+flask-json-errorhandler==1.0.3
+gunicorn==19.8.1
