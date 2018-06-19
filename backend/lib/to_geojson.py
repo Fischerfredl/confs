@@ -12,7 +12,7 @@ def to_geojson(confs):
             'type': 'Feature',
             'geometry': {
                 'type': 'Point',
-                'coordinates': [conf['coords']['lon'], conf['coords']['lat']]
+                'coordinates': [float(conf['coords']['lon']), float(conf['coords']['lat'])]
             },
             'properties': conf
         })
