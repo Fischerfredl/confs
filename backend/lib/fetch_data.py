@@ -7,7 +7,7 @@ from lib.geocode import geocode
 from lib.redis_cache import get_cache, set_cache
 
 
-def get_confs(req_topics, start_year, end_year):
+def get_confs(req_topics=None, start_year=None, end_year=None):
     """Fetch all data from start_year to end_year for topic list"""
 
     req_topics = req_topics or ','.join(topics.keys())

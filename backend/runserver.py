@@ -68,7 +68,7 @@ def query():
 
 @app.route('/query/meta')
 def meta():
-    confs = get_confs(topics.keys(), min_year, max_year)
+    confs = get_confs()
 
     description = {
         'topics': list(topics.keys()),
