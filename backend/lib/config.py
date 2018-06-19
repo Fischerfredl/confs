@@ -25,4 +25,4 @@ max_year = 2025
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
 redis_port = int(os.environ.get('REDIS_PORT', 6379))
 
-cache_seconds = int(os.environ.get('CACHE_SECONDS', 3600))
+cache_seconds = int(os.environ.get('CACHE_SECONDS', 14400))
