@@ -24,3 +24,7 @@ services:
   redis:
     restart: always
     image: redis:4-alpine
+
+  ping:
+    restart: always
+    build: ./ping
