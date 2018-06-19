@@ -8,11 +8,12 @@ def to_geojson(confs):
     }
 
     for conf in confs:
+        coords = conf.pop('coords')
         collection['features'].append({
             'type': 'Feature',
             'geometry': {
                 'type': 'Point',
-                'coordinates': [float(conf['coords']['lon']), float(conf['coords']['lat'])]
+                'coordinates': [float(coords['lon']), float(coords['lat'])]
             },
             'properties': conf
         })

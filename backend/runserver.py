@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import hashlib
+import json
 from flask import Flask, jsonify, request, abort, Response
 from flask_cors import CORS
 from flask_json_errorhandler import init_errorhandler
 
 from lib.config import topics, min_year, max_year
 from lib.filter_data import filter_bbox, filter_country
-from lib import validate_year, validate_topics, get_confs, to_ics, to_geojson
+from lib import get_confs, to_ics, to_geojson
+from lib.redis_cache import get_cache, set_cache
 
 
 app = Flask(__name__)
@@ -18,30 +21,20 @@ init_errorhandler(app)
 
 @app.route('/query')
 def query():
-    # evaluate params
-    # topics
+    # check cache
+    cache_key = 'response-' + hashlib.sha1(request.query_string).hexdigest()
+    cached = get_cache(cache_key)
+
+    if cached is not None:
+        return Response(cached['content'],
+                        mimetype=cached['mimetype'],
+                        headers={'X-Total-Count': cached['num_items']}), 200
+
+    # cache miss: get data
     try:
-        req_topics = validate_topics(request.args.get('topics') or ','.join(topics.keys()))
+        confs = get_confs(request.args.get('topics'), request.args.get('startYear'), request.args.get('endYear'))
     except ValueError as e:
-        return abort(400, 'topics: ' + str(e))
-
-    # startYear
-    try:
-        start_year = validate_year(request.args.get('startYear', min_year))
-    except ValueError as e:
-        return abort(400, 'startYear: ' + str(e))
-
-    # endYear
-    try:
-        end_year = validate_year(request.args.get('endYear', max_year))
-    except ValueError as e:
-        return abort(400, 'endYear: ' + str(e))
-
-    if start_year > end_year:
-        raise ValueError("startYear must not be greater than endYear.")
-
-    # get data
-    confs = get_confs(req_topics, start_year, end_year)
+        return abort(400, str(e))
 
     # filter by country
     if request.args.get('country'):
@@ -53,14 +46,24 @@ def query():
 
     # determine format
     req_format = request.args.get('format', 'json')
+    resp_obj = None
 
     if req_format == 'ical':
-        return Response(to_ics(confs), mimetype='text/calendar')
-    if req_format == 'geojson':
-        return Response(to_geojson(confs), mimetype='application/geo+json')
-    if req_format != 'json':
+        resp_obj = dict(content=to_ics(confs), mimetype='text/calendar', num_items=len(confs))
+    elif req_format == 'geojson':
+        resp_obj = dict(content=to_geojson(confs), mimetype='application/geo+json', num_items=len(confs))
+    elif req_format == 'json':
+        resp_obj = dict(content=json.dumps(confs), mimetype='application/json', num_items=len(confs))
+
+    if resp_obj is None:
         return abort(400, 'Format \'{}\' not supported.'.format(req_format))
-    return jsonify(confs), 200
+
+    # set cache
+    set_cache(cache_key, resp_obj, 60)
+
+    return Response(resp_obj['content'],
+                    mimetype=resp_obj['mimetype'],
+                    headers={'X-Total-Count': resp_obj['num_items']}), 200
 
 
 @app.route('/query/meta')
