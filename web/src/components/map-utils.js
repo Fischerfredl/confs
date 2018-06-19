@@ -23,15 +23,14 @@ class MapUtils extends connect(store)(LitElement) {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
 
-    this.layer = L.geoJson()
-    this.layer.addTo(this.map)
+    this.markers = L.markerClusterGroup()
+    this.map.addLayer(this.markers)
   }
 
 
   refresh(data) {
-    this.layer.clearLayers()
-    this.layer.addData(data)
-
+    this.markers.clearLayers()
+    this.markers.addLayer(L.geoJson(data))
   }
 
   static get properties() {

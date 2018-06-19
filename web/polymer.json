@@ -8,6 +8,7 @@
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
     "node_modules/leaflet/dist/**",
+    "node_modules/leaflet.markercluster/dist",
     "push-manifest.json"
   ],
   "autoBasePath": true,
