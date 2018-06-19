@@ -64,7 +64,6 @@ def fetch(topic, year):
     if cached is not None and random.random() < 0.999:  # long living cache. refresh randomly to distribute requests
         return cached
 
-    print('Cache busted')
     # fetch from api
     src = 'https://raw.githubusercontent.com/tech-conferences/confs.tech/master/conferences/{year}/{topic}.json'
     # Hack: javascript confs are stored in a different repo
