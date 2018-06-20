@@ -21,6 +21,10 @@ module.exports = {
     {
       urlPattern: /^https:\/\/fonts.gstatic.com\//,
       handler: 'fastest'
+    },
+    {
+      urlPattern: /^https:\/\/a.tile.openstreetmap.org\//,
+      handler: 'cacheFirst'
     }
   ],
   navigateFallback: 'index.html',
