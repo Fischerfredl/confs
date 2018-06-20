@@ -86,7 +86,8 @@ def fetch(topic, year):
     # add data
     for conf in confs:
         # add topic data
-        conf['topic'] = topics[topic]['name']
+        conf['topic'] = topic
+        conf['topic_fullname'] = topics[topic]['name']
         conf['tagged_name'] = topics[topic]['tag'] + ' ' + conf['name']
         # add year to data
         conf['year'] = year
