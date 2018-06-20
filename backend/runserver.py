@@ -10,7 +10,7 @@ from flask_cors import CORS
 from flask_json_errorhandler import init_errorhandler
 
 from lib.config import topics, min_year, max_year, request_cache
-from lib.filter_data import filter_bbox, filter_country, filter_past
+from lib.filter_data import filter_bbox, filter_country, filter_past, filter_from_date, filter_to_date
 from lib import get_confs, to_ics, to_geojson
 from lib.redis_cache import get_cache, set_cache
 
@@ -35,20 +35,29 @@ def query():
     # cache miss: get data
     try:
         confs = get_confs(request.args.get('topics'), request.args.get('startYear'), request.args.get('endYear'))
+
+        # filter by country
+        if request.args.get('country'):
+            confs = filter_country(confs, request.args.get('country'))
+
+        # filter by bbox
+        if request.args.get('bbox'):
+            confs = filter_bbox(confs, request.args.get('bbox'))
+
+        # filter by past dates
+        if request.args.get('exclude_past'):
+            confs = filter_past(confs, request.args.get('exclude_past'))
+
+        # filter by from date
+        if request.args.get('fromDate'):
+            confs = filter_from_date(confs, request.args.get('fromDate'))
+
+        # filter by past to date
+        if request.args.get('toDate'):
+            confs = filter_to_date(confs, request.args.get('toDate'))
+
     except ValueError as e:
         return abort(400, str(e))
-
-    # filter by country
-    if request.args.get('country'):
-        confs = filter_country(confs, request.args.get('country'))
-
-    # filter by bbox
-    if request.args.get('bbox'):
-        confs = filter_bbox(confs, request.args.get('bbox'))
-
-    # filter by past dates
-    if request.args.get('exclude_past'):
-        confs = filter_past(confs, request.args.get('exclude_past'))
 
     # determine format
     req_format = request.args.get('format', 'json')

@@ -41,3 +41,31 @@ def filter_past(confs, arg):
         return conf_date.date() > now.date()
 
     return [conf for conf in confs if filter_func(conf)]
+
+
+def filter_from_date(confs, arg):
+    try:
+        from_date = datetime.datetime.strptime(arg, '%Y-%m-%d')
+    except ValueError as e:
+        raise e
+
+    def filter_func(conf):
+        conf_date = datetime.datetime.strptime(conf['endDate'], '%Y-%m-%d')
+
+        return conf_date.date() >= from_date.date()
+
+    return [conf for conf in confs if filter_func(conf)]
+
+
+def filter_to_date(confs, arg):
+    try:
+        to_date = datetime.datetime.strptime(arg, '%Y-%m-%d')
+    except ValueError as e:
+        raise e
+
+    def filter_func(conf):
+        conf_date = datetime.datetime.strptime(conf['startDate'], '%Y-%m-%d')
+
+        return conf_date.date() <= to_date.date()
+
+    return [conf for conf in confs if filter_func(conf)]
