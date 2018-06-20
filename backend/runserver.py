@@ -10,7 +10,7 @@ from flask_cors import CORS
 from flask_json_errorhandler import init_errorhandler
 
 from lib.config import topics, min_year, max_year, request_cache
-from lib.filter_data import filter_bbox, filter_country
+from lib.filter_data import filter_bbox, filter_country, filter_past
 from lib import get_confs, to_ics, to_geojson
 from lib.redis_cache import get_cache, set_cache
 
@@ -45,6 +45,10 @@ def query():
     # filter by bbox
     if request.args.get('bbox'):
         confs = filter_bbox(confs, request.args.get('bbox'))
+
+    # filter by past dates
+    if request.args.get('exclude_past'):
+        confs = filter_past(confs, request.args.get('exclude_past'))
 
     # determine format
     req_format = request.args.get('format', 'json')

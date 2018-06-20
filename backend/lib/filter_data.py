@@ -1,3 +1,6 @@
+import datetime
+
+
 def filter_country(confs, arg):
     country_list = arg.split(',')
 
@@ -22,5 +25,19 @@ def filter_bbox(confs, arg):
         y = float(conf['coords']['lat'])
         return (x1 <= x <= x2 or x2 <= x <= x1) and \
                (y1 <= y <= y2 or y2 <= y <= y1)
+
+    return [conf for conf in confs if filter_func(conf)]
+
+
+def filter_past(confs, arg):
+    if arg != 'true':
+        return confs
+
+    def filter_func(conf):
+        conf_date = datetime.datetime.strptime(conf['endDate'], '%Y-%m-%d')
+        conf_date += datetime.timedelta(days=1)
+        now = datetime.datetime.utcnow()
+
+        return conf_date.date() > now.date()
 
     return [conf for conf in confs if filter_func(conf)]
