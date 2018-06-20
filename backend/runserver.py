@@ -3,11 +3,13 @@
 
 import hashlib
 import json
+import logging
+
 from flask import Flask, jsonify, request, abort, Response
 from flask_cors import CORS
 from flask_json_errorhandler import init_errorhandler
 
-from lib.config import topics, min_year, max_year
+from lib.config import topics, min_year, max_year, request_cache
 from lib.filter_data import filter_bbox, filter_country
 from lib import get_confs, to_ics, to_geojson
 from lib.redis_cache import get_cache, set_cache
@@ -59,7 +61,7 @@ def query():
         return abort(400, 'Format \'{}\' not supported.'.format(req_format))
 
     # set cache
-    set_cache(cache_key, resp_obj, 60)
+    set_cache(cache_key, resp_obj, request_cache)
 
     return Response(resp_obj['content'],
                     mimetype=resp_obj['mimetype'],
@@ -81,4 +83,5 @@ def meta():
 
 
 if __name__ == '__main__':
+    logging.getLogger().setLevel(logging.INFO)
     app.run(host='localhost', debug=True)

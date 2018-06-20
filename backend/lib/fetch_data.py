@@ -1,9 +1,7 @@
-import hashlib
 import requests
-import random
 
-from lib.config import topics, min_year, max_year, cache_seconds
-from lib.geocode import geocode
+from lib.config import topics, min_year, max_year, fetch_cache
+from lib.normalize_data import normalize_confs
 from lib.redis_cache import get_cache, set_cache
 
 
@@ -44,10 +42,12 @@ def get_confs(req_topics=None, start_year=None, end_year=None):
 
     # aggregate data
     data = list()
+
     for year in range(start_year, end_year+1):
         for topic in parsed_topics:
-            data.extend(fetch(topic, year))
-
+            tmp = fetch(topic, year)
+            tmp = normalize_confs(tmp, topic, year)
+            data.extend(tmp)
     return data
 
 
@@ -59,9 +59,9 @@ def fetch(topic, year):
     """
 
     # check if cached
-    cache_key = f'{year}-{topic}'
+    cache_key = f'raw-{year}-{topic}'
     cached = get_cache(cache_key)
-    if cached is not None and random.random() < 0.999:  # long living cache. refresh randomly to distribute requests
+    if cached is not None:
         return cached
 
     # fetch from api
@@ -80,36 +80,5 @@ def fetch(topic, year):
     except requests.HTTPError:
         confs = []
 
-    # remove entries with faulty date
-    confs = [conf for conf in confs if conf.get('startDate') is not None]
-
-    # add data
-    for conf in confs:
-        # add topic data
-        conf['topic'] = topic
-        conf['topic_fullname'] = topics[topic]['name']
-        conf['tagged_name'] = topics[topic]['tag'] + ' ' + conf['name']
-        # add year to data
-        conf['year'] = year
-        # add end date if missing
-        if conf.get('endDate') is None:
-            conf['endDate'] = conf['startDate']
-        # add id
-        id_string = '{year}|{topic}|{name}|{date}|{city}'.format(
-            year=year,
-            topic=topic,
-            name=conf['name'],
-            date=conf['startDate'],
-            city=conf.get('city', 'no city'))
-        conf['id'] = hashlib.sha1(id_string.encode('utf-8')).hexdigest()
-
-        conf['coords'] = geocode(conf.get('city') or conf.get('country'))
-
-    # uniquify list
-    data = dict()
-    for conf in confs:
-        data[conf['id']] = conf
-    data = list(data.values())
-
-    set_cache(cache_key, data, cache_seconds)
-    return data
+    set_cache(cache_key, confs, fetch_cache)
+    return confs

@@ -28,10 +28,10 @@ def to_ics(confs):
 
         env.add('uid', conf['id'])
         env.add('dtstamp', timestamp)
-        env.add('summary', conf['tagged_name'])
+        env.add('summary', conf['taggedName'])
         env.add('location', conf.get('city', '') + ', ' + conf.get('country', ''))
         env.add('description', conf.get('url', ''))
 
         cal.add_component(env)
 
-    return cal.to_ical()
+    return cal.to_ical().decode('utf-8')
