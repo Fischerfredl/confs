@@ -17,7 +17,7 @@ from lib.redis_cache import get_cache, set_cache
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, expose_headers=['X-Total-Count'])
 init_errorhandler(app)
 
 
