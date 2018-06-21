@@ -18,7 +18,8 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose
 
 const initialState = {
   data: [],
-  metadata: { topics: [], countries: []}
+  metadata: { topics: [], countries: []},
+  settings: {}
 }
 
 export const store = createStore(

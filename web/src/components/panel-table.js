@@ -11,9 +11,24 @@ class PanelTable extends connect(store)(LitElement) {
 <style>
 :host {
     display: block;
+    padding: 15px;
     max-height: 500px;
-    overflow: scroll;
+    overflow: auto;
 }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {background-color: #f5f5f5;}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 
 <h1>Table</h1> 
@@ -33,5 +48,5 @@ class PanelTable extends connect(store)(LitElement) {
 window.customElements.define('panel-table', PanelTable);
 
 const confToTr = (conf) => {
-  return html`<tr><td>${conf.taggedName}</td></tr>`
+  return html`<tr><td>${conf.name}</td></tr>`
 }

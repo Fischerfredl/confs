@@ -9,6 +9,9 @@ class SettingsCountries extends LitElement {
 <style>
 :host {
     display: block;
+    min-width: 160px;
+    max-height: 40vh;
+    overflow: auto;
 }
 
 ul {
@@ -25,9 +28,15 @@ li[visible] {
 }
 
 
+li:hover {
+    background-color: #dddddd;
+    cursor: pointer;
+}
+
+
 </style>
 
-<h1>set countries</h1>
+<h2>Countries</h2>
 
 <ul> 
     ${countries.map((obj, index) => html`
@@ -41,6 +50,7 @@ li[visible] {
 ${this.showCount < countries.length ? html`<button on-click="${e => this.showCount += 5}">Show more</button>` : ``}
 ${this.showCount > 5 ? html`<button on-click="${e => this.showCount -= 5}">Show less</button>` : ``}
 
+${countries.length === 0 ? `Data not yet available`: ``}
 `
   }
 

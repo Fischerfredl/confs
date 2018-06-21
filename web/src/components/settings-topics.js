@@ -9,6 +9,9 @@ class SettingsTopics extends LitElement {
 <style>
 :host {
     display: block;
+    min-width: 160px;
+    max-height: 40vh;
+    overflow: auto;
 }
 
 ul {
@@ -24,9 +27,14 @@ li[visible] {
     align-items: center;
 }
 
+li:hover {
+    background-color: #dddddd;
+    cursor: pointer;
+}
+
 </style>
 
-<h1>set topics</h1>
+<h2>Topics</h2>
 
 <ul> 
     ${topics.map((obj, index) => html`
@@ -39,6 +47,8 @@ li[visible] {
 </ul>
 ${this.showCount < topics.length ? html`<button on-click="${e => this.showCount += 5}">Show more</button>` : ``}
 ${this.showCount > 5 ? html`<button on-click="${e => this.showCount -= 5}">Show less</button>` : ``}
+
+${topics.length === 0 ? `Data not yet available`: ``}
 `
   }
 

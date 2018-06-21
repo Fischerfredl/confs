@@ -10,6 +10,8 @@ import { updateOffline } from '../actions/app'
 import './map-utils'
 import './panel-settings'
 import './panel-table'
+import './panel-ical'
+import './view-header'
 
 class MyApp extends connect(store)(LitElement) {
   _render() {
@@ -32,22 +34,37 @@ class MyApp extends connect(store)(LitElement) {
     grid-template-areas:   
         "control-1 map"
         "control-2 map"
-        "control-3 map"
         "table table";
     
-    grid-gap: 10px 10px;
-    padding: 10px;
-    
-    
+    grid-gap: 15px 15px;
+    padding: 10px; 
+    margin: 10px 0;
+}
+
+@media screen and (max-width: 900px) {
+    .grid {
+        grid-template-areas:   
+            "control-1 control-1"
+            "control-2 control-2"
+            "map map"
+            "table table";
+    }
 }
 
 .grid > * {
-border-radius: 20px;
-box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 panel-settings { grid-area: control-1 }
+panel-ical { grid-area: control-2}
 panel-table { grid-area: table }
+
+::slotted(*) {
+    grid-area: map;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}    
 
 #footer { 
     background-color: dimgrey;
@@ -55,35 +72,17 @@ panel-table { grid-area: table }
 }
 
 
-
-@media screen and (max-width: 900px) {
-    .grid {
-  
-  grid-template-areas:   
-    "control-1 control-1"
-    "control-2 control-2"
-    "map map"
-    "control-3 control-3"
-    "table table";
-    
-}
-}
-
-
-
 </style>
-<div id="header" style="background-color: red; height: 100px">Header</div>
+<view-header></view-header>
 <div class="grid">
 
     <panel-settings></panel-settings>
     <panel-table></panel-table>
-    <div id="control-3" style="background-color: chocolate; grid-area: control-3">Test2</div>
-    <div id="table" style="background-color: chartreuse; grid-area: control-2">Test2</div>
-    <div class="map" style="grid-area: map;">
-        <slot name="map"></slot>
-        <map-utils></map-utils>
-    </div>
+    <panel-ical></panel-ical>
+    <slot name="map"></slot>
 </div>
+
+<map-utils></map-utils>
 <div id="footer">Made by Alfred Melch</div>
     
     `

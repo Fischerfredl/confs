@@ -2,7 +2,7 @@ import { LitElement, html } from '@polymer/lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store.js'
-import { setTopics, setCountries } from '../actions/settings.js'
+import { setTopics, setCountries, updateExcludePast } from '../actions/settings.js'
 import { getData } from '../actions/data'
 
 import './settings-topics.js'
@@ -13,9 +13,37 @@ import queryString from '../lib/query_string.js'
 class PanelSettings extends connect(store)(LitElement) {
   _render({_settings, orderedTopics, orderedCountries}) {
     return html`
-<h1>Panel-Settings</h1>
-<settings-topics topics="${orderedTopics}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
-<settings-countries countries="${orderedCountries}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
+<style>
+:host {
+    padding: 15px;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex > *{
+    flex: 1;
+}
+
+.exclude-past {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+</style>
+
+<div class="flex">
+    <settings-topics topics="${orderedTopics}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
+    <settings-countries countries="${orderedCountries}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
+    
+</div>
+<div class="exclude-past">
+    <mwc-checkbox on-click="${e => this.updateExcludePast(e)}"></mwc-checkbox>
+    <label>Exclude past conferences</label>
+</div>
 `
   }
 
@@ -41,6 +69,17 @@ class PanelSettings extends connect(store)(LitElement) {
     this.orderTopics(state.metadata.topics)
     this.orderCountries(state.metadata.countries)
   }
+
+  _didRender(properties, changeList) {
+    if ('_settings' in changeList) {
+      store.dispatch(getData())
+    }
+  }
+
+  updateExcludePast(e) {
+    store.dispatch(updateExcludePast(!e.target.checked))
+  }
+
 
   orderTopics(topics) {
     const fetch_topic = (topic) => {
@@ -73,12 +112,7 @@ class PanelSettings extends connect(store)(LitElement) {
   }
 
 
-  _didRender(properties, changeList) {
-    if ('_settings' in changeList) {
-      console.log('changed')
-      store.dispatch(getData())
-    }
-  }
+
 }
 
 window.customElements.define('panel-settings', PanelSettings);
