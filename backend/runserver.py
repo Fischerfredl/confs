@@ -45,8 +45,8 @@ def query():
             confs = filter_bbox(confs, request.args.get('bbox'))
 
         # filter by past dates
-        if request.args.get('exclude_past'):
-            confs = filter_past(confs, request.args.get('exclude_past'))
+        if request.args.get('excludePast'):
+            confs = filter_past(confs, request.args.get('excludePast'))
 
         # filter by from date
         if request.args.get('fromDate'):
