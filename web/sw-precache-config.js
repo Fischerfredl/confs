@@ -35,7 +35,7 @@ module.exports = {
       handler: 'cacheFirst'
     },
     {
-      urlPattern: /\/query\//,
+      urlPattern: /\/query/,
       handler: 'fastest'
     }
   ],
