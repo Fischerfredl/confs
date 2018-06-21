@@ -19,12 +19,24 @@ module.exports = {
       handler: 'fastest'
     },
     {
+      urlPattern: /\/leaflet\//,
+      handler: 'fastest'
+    },
+    {
+      urlPattern: /\/leaflet.markercluster\//,
+      handler: 'fastest'
+    },
+    {
       urlPattern: /^https:\/\/fonts.gstatic.com\//,
       handler: 'fastest'
     },
     {
-      urlPattern: /^https:\/\/a.tile.openstreetmap.org\//,
+      urlPattern: /tile.openstreetmap.org\//,
       handler: 'cacheFirst'
+    },
+    {
+      urlPattern: /\/query\//,
+      handler: 'fastest'
     }
   ],
   navigateFallback: 'index.html',

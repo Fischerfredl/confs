@@ -5,9 +5,11 @@ import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store'
 import { fetch_metadata } from '../actions/metadata.js'
+import { updateOffline } from '../actions/app'
 
 import './map-utils'
 import './panel-settings'
+import './panel-table'
 
 class MyApp extends connect(store)(LitElement) {
   _render() {
@@ -21,23 +23,17 @@ class MyApp extends connect(store)(LitElement) {
     min-height: 100vh;
 }
 
-.map {
-    min-height: 300px;
-}
-
 .grid {
     flex: 1;
     
     display: grid;
     grid-template-columns: 1fr 3fr;
-    
-    min-height: 85vh;
-  
+      
     grid-template-areas:   
         "control-1 map"
         "control-2 map"
         "control-3 map"
-        "table map";
+        "table table";
     
     grid-gap: 10px 10px;
     padding: 10px;
@@ -51,7 +47,7 @@ box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 panel-settings { grid-area: control-1 }
-
+panel-table { grid-area: table }
 
 #footer { 
     background-color: dimgrey;
@@ -80,9 +76,9 @@ panel-settings { grid-area: control-1 }
 <div class="grid">
 
     <panel-settings></panel-settings>
-    <div id="control-2" style="background-color: crimson; grid-area: control-2">Test2</div>
+    <panel-table></panel-table>
     <div id="control-3" style="background-color: chocolate; grid-area: control-3">Test2</div>
-    <div id="table" style="background-color: chartreuse; grid-area: table">Test2</div>
+    <div id="table" style="background-color: chartreuse; grid-area: control-2">Test2</div>
     <div class="map" style="grid-area: map;">
         <slot name="map"></slot>
         <map-utils></map-utils>
@@ -98,8 +94,15 @@ panel-settings { grid-area: control-1 }
     }
   }
 
+  constructor() {
+    super();
+    // To force all event listeners for gestures to be passive.
+    // See https://www.polymer-project.org/2.0/docs/devguide/gesture-events#use-passive-gesture-listeners
+    setPassiveTouchGestures(true);
+  }
+
   _firstRendered() {
-    installOfflineWatcher((offline) => { /*console.log(offline)*/ })
+    installOfflineWatcher((offline) => { store.dispatch(updateOffline(offline)) })
     store.dispatch(fetch_metadata())
 
   }

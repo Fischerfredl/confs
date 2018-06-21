@@ -12,7 +12,7 @@ const metadata = (state = initialState, action) => {
     case RECEIVE_METADATA:
       return { ...state, ...action.data }
     default:
-      return state;
+      return state
   }
 }
 
