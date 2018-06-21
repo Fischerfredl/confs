@@ -5,13 +5,22 @@ import '@material/mwc-checkbox'
 
 class SettingsTopics extends LitElement {
   _render({ topics, selected, showCount }) {
+    topics = topics.sort((a, b) => {
+      if (selected.indexOf(a.topic) > -1 && selected.indexOf(b.topic) === -1) {
+        return -1
+      }
+      if (selected.indexOf(a.topic) === -1 && selected.indexOf(b.topic) > -1) {
+        return 1
+      }
+      return b.num - a.num
+    })
+
     return html`
 <style>
 :host {
     display: block;
     min-width: 160px;
-    max-height: 40vh;
-    overflow: auto;
+    margin: 0 20px;
 }
 
 ul {
@@ -32,13 +41,18 @@ li:hover {
     cursor: pointer;
 }
 
+.topic-list {
+    max-height: 30vh;
+    overflow: auto;
+}
+
 </style>
 
-<h2>Topics</h2>
+<div style="display: flex; align-items: center"><h2 style="flex: 1">Topics</h2><button on-click="${e => {this.selected = []; this.notify() }}">Reset</button></div>
 
-<ul> 
+<ul class="topic-list"> 
     ${topics.map((obj, index) => html`
-        <li on-click="${e => this.update(obj.topic)}" visible?="${index < showCount}">
+        <li on-click="${e => { e.preventDefault(); this.update(obj.topic)}} " visible?="${index < showCount}">
             <mwc-checkbox id="${obj.topic}" checked?="${selected.indexOf(obj.topic) > -1}"></mwc-checkbox>
             ${obj.topic}
             (${obj.num})
@@ -80,9 +94,11 @@ ${topics.length === 0 ? `Data not yet available`: ``}
         this.selected = [...this.selected, topic]
       }
     }
-
+    this.notify()
+  }
+  
+  notify() {
     this.dispatchEvent(new CustomEvent('updateTopics', { bubbles: true, composed: true, detail: { selected: this.selected } }))
-
   }
 
 }

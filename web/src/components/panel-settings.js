@@ -11,7 +11,7 @@ import './settings-countries.js'
 import queryString from '../lib/query_string.js'
 
 class PanelSettings extends connect(store)(LitElement) {
-  _render({_settings, orderedTopics, orderedCountries}) {
+  _render({_settings, topicList, countryList}) {
     return html`
 <style>
 :host {
@@ -36,8 +36,8 @@ class PanelSettings extends connect(store)(LitElement) {
 </style>
 
 <div class="flex">
-    <settings-topics topics="${orderedTopics}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
-    <settings-countries countries="${orderedCountries}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
+    <settings-topics topics="${topicList}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
+    <settings-countries countries="${countryList}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
     
 </div>
 <div class="exclude-past">
@@ -49,16 +49,16 @@ class PanelSettings extends connect(store)(LitElement) {
 
   constructor() {
     super()
-    this.orderedTopics = []
-    this.orderedCountries = []
+    this.countryList = []
+    this.topicList = []
   }
 
   static get properties() {
     return {
       _settings: Object,
       _metadata: Object,
-      orderedTopics: Array,
-      orderedCountries: Array
+      topicList: Array,
+      countryList: Array
     }
   }
 
@@ -66,8 +66,8 @@ class PanelSettings extends connect(store)(LitElement) {
     this._settings = state.settings
     this._metadata = state.metadata
 
-    this.orderTopics(state.metadata.topics)
-    this.orderCountries(state.metadata.countries)
+    this.updateTopics(state.metadata.topics)
+    this.updateCountries(state.metadata.countries)
   }
 
   _didRender(properties, changeList) {
@@ -81,7 +81,7 @@ class PanelSettings extends connect(store)(LitElement) {
   }
 
 
-  orderTopics(topics) {
+  updateTopics(topics) {
     const fetch_topic = (topic) => {
       return fetch('https://confs.muperfredi.de/query' + queryString({...this._settings, topics: [topic]}), {method: 'HEAD'})
         .then(res => res.headers.get('X-Total-Count'))
@@ -90,12 +90,11 @@ class PanelSettings extends connect(store)(LitElement) {
     }
 
     Promise.all(topics.map(topic => fetch_topic(topic)))
-      .then(unordered => {
-        this.orderedTopics = unordered.sort((a, b) => b.num - a.num)})
+      .then(topicList => { this.topicList = topicList })
 
   }
 
-  orderCountries(countries) {
+  updateCountries(countries) {
     const fetch_topic = (country) => {
       return fetch('https://confs.muperfredi.de/query' + queryString({...this._settings, countries: [country]}), {method: 'HEAD'})
         .then(res => res.headers.get('X-Total-Count'))
@@ -104,11 +103,7 @@ class PanelSettings extends connect(store)(LitElement) {
     }
 
     Promise.all(countries.map(country => fetch_topic(country)))
-      .then(unordered => {
-        let ordered = unordered
-          .filter((obj) => obj.num !== 0)
-          .sort((a, b) => b.num - a.num)
-        this.orderedCountries = ordered})
+      .then(countryList => { this.countryList = countryList})
   }
 
 

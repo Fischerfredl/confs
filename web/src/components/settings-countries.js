@@ -5,13 +5,22 @@ import '@material/mwc-checkbox'
 
 class SettingsCountries extends LitElement {
   _render({ countries, selected, showCount }) {
+    let sortedCountries = countries.sort((a, b) => {
+      if (selected.indexOf(a.country) > -1 && selected.indexOf(b.country) === -1) {
+        return -1
+      }
+      if (selected.indexOf(a.country) === -1 && selected.indexOf(b.country) > -1) {
+        return 1
+      }
+      return b.num - a.num
+    })
+
     return html`
 <style>
 :host {
     display: block;
     min-width: 160px;
-    max-height: 40vh;
-    overflow: auto;
+    margin: 0 20px;
 }
 
 ul {
@@ -33,14 +42,19 @@ li:hover {
     cursor: pointer;
 }
 
+.country-list {
+    max-height: 30vh;
+    overflow: auto;
+}
 
 </style>
 
-<h2>Countries</h2>
+<div style="display: flex; align-items: center"><h2 style="flex: 1">Countries</h2><button on-click="${e => {this.selected = []; this.notify(); }}">Reset</button></div>
 
-<ul> 
-    ${countries.map((obj, index) => html`
-        <li on-click="${e => this.update(obj.country)}" visible?="${index < showCount}">
+
+<ul class="country-list"> 
+    ${sortedCountries.map((obj, index) => html`
+        <li on-click="${e => { e.preventDefault(); this.update(obj.country)}}" visible?="${index < showCount}">
             <mwc-checkbox id="${obj.country}" checked?="${selected.indexOf(obj.country) > -1}"></mwc-checkbox>
             ${obj.country}
             (${obj.num})
@@ -82,9 +96,11 @@ ${countries.length === 0 ? `Data not yet available`: ``}
         this.selected = [...this.selected, country]
       }
     }
+    this.notify()
+  }
 
+  notify() {
     this.dispatchEvent(new CustomEvent('updateCountries', { bubbles: true, composed: true, detail: { selected: this.selected } }))
-
   }
 
 }
