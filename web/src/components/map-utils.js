@@ -33,7 +33,7 @@ class MapUtils extends connect(store)(LitElement) {
 
   refresh(data) {
     this.markers.clearLayers()
-    const layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: iconset[conf.topic]})))
+    const layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: iconset[conf.topic]}).bindPopup(confToPopup(conf))))
     this.markers.addLayer(layer)
   }
 
@@ -51,3 +51,23 @@ class MapUtils extends connect(store)(LitElement) {
 }
 
 customElements.define('map-utils', MapUtils)
+
+
+const attrToLine = (conf, attr, attrName) => conf[attr] ? `<span>${attrName || attr}: ${conf[attr]}</span><br>` : ``
+
+const confToPopup = (conf) => {
+  return `
+  <b>${conf.taggedName}</b><br>
+  <span>start: ${conf.startDate}</span><br>
+  <span>end: ${conf.endDate}</span><br>
+  ${conf.url ? `<span><a href="${conf.url}" target="_blank">Link</a></span><br>` : ``}
+  ${attrToLine(conf, 'city', 'City')}
+  ${attrToLine(conf, 'country', 'Country')}
+  ${attrToLine(conf, 'cfpStart')}
+  ${attrToLine(conf, 'cfpEnd')}
+  ${conf.cfpUrl ? `<span><a href="${conf.cfpUrl}" target="_blank">cfp Link</a></span><br>` : ``}
+  
+  `
+}
+
+
