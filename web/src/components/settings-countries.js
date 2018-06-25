@@ -6,12 +6,12 @@ import '@material/mwc-button'
 import { SharedStyles} from './shared-styles'
 
 class SettingsCountries extends LitElement {
-  _render({ countries, selected, showCount }) {
+  _render({ countries, selected, showCount, preventJumps }) {
     let sortedCountries = countries.sort((a, b) => {
-      if (selected.indexOf(a.country) > -1 && selected.indexOf(b.country) === -1) {
+      if (!preventJumps && selected.indexOf(a.country) > -1 && selected.indexOf(b.country) === -1) {
         return -1
       }
-      if (selected.indexOf(a.country) === -1 && selected.indexOf(b.country) > -1) {
+      if (!preventJumps && selected.indexOf(a.country) === -1 && selected.indexOf(b.country) > -1) {
         return 1
       }
       return b.num - a.num
@@ -77,13 +77,15 @@ ${countries.length === 0 ? `Data not yet available`: ``}
     super()
     this.selected = []
     this.showCount = 5
+    this.preventJumps = false
   }
 
   static get properties() {
     return {
       countries: Array,
       selected: Array,
-      showCount: Number
+      showCount: Number,
+      preventJumps: Boolean
     }
   }
 

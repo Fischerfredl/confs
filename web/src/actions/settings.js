@@ -26,8 +26,8 @@ export const updateExcludePast = (exclude_past) => {
 }
 
 export const updateFromDate = (enabled, date) => {
-  return enabled ? { date, type: SET_FROM_DATE } : { type: DEL_FROM_DATE }
+  return enabled && !isNaN(Date.parse(date)) ? { date, type: SET_FROM_DATE } : { type: DEL_FROM_DATE }
 }
 
 export const updateToDate = (enabled, date) => {
-  return enabled ? { date, type: SET_TO_DATE } : { type: DEL_TO_DATE } }
+  return enabled && !isNaN(Date.parse(date)) ? { date, type: SET_TO_DATE } : { type: DEL_TO_DATE } }

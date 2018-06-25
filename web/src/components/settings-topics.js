@@ -6,12 +6,12 @@ import '@material/mwc-button'
 import { SharedStyles } from './shared-styles'
 
 class SettingsTopics extends LitElement {
-  _render({ topics, selected, showCount }) {
+  _render({ topics, selected, showCount, preventJumps }) {
     topics = topics.sort((a, b) => {
-      if (selected.indexOf(a.topic) > -1 && selected.indexOf(b.topic) === -1) {
+      if (!preventJumps && selected.indexOf(a.topic) > -1 && selected.indexOf(b.topic) === -1) {
         return -1
       }
-      if (selected.indexOf(a.topic) === -1 && selected.indexOf(b.topic) > -1) {
+      if (!preventJumps && selected.indexOf(a.topic) === -1 && selected.indexOf(b.topic) > -1) {
         return 1
       }
       return b.num - a.num
@@ -75,13 +75,16 @@ ${topics.length === 0 ? `Data not yet available`: ``}
     super()
     this.selected = []
     this.showCount = 5
+    this.preventJumps = false
   }
 
   static get properties() {
     return {
       topics: Array,
       selected: Array,
-      showCount: Number }
+      showCount: Number,
+      preventJumps: Boolean
+    }
   }
 
   update(topic) {

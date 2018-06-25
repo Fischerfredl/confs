@@ -5,7 +5,7 @@ import '@material/mwc-button'
 
 import { store } from '../store.js'
 import { updateAutozoom } from '../actions/app.js'
-import { setTopics, setCountries, updateExcludePast } from '../actions/settings.js'
+import { setTopics, setCountries, updateExcludePast, updateFromDate, updateToDate } from '../actions/settings.js'
 import { filterData } from '../actions/data'
 
 import './settings-topics.js'
@@ -17,7 +17,8 @@ import unique from '../lib/uniqueList.js'
 import { SharedStyles } from './shared-styles'
 
 class PanelSettings extends connect(store)(LitElement) {
-  _render({showAdvanced}) {
+  _render({showAdvanced, preventJumps}) {
+    console.log(preventJumps)
     return html`
 <style>
 ${SharedStyles}
@@ -54,8 +55,8 @@ hr {
 <h2>Settings</h2>
 <hr>
 <div class="flex">
-    <settings-topics topics="${this.getTopicList()}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
-    <settings-countries countries="${this.getCountryList()}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
+    <settings-topics topics="${this.getTopicList()}" preventJumps?="${preventJumps}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
+    <settings-countries countries="${this.getCountryList()}" preventJumps?="${preventJumps}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
     
 </div>
 <hr>
@@ -69,9 +70,23 @@ hr {
         <label>Automatically pan map to markers</label>
     </div>
     <div class="setting">
+        <mwc-checkbox on-click="${e => this.preventJumps = !e.target.checked}"></mwc-checkbox>
+        <label>Do not show selected topics/countries on top of list.</label>
+    </div>
+    <div class="setting">
         <mwc-checkbox on-click="${e => store.dispatch(updateExcludePast(!e.target.checked))}"></mwc-checkbox>
     <label>Exclude past conferences</label>
-</div>
+    </div>
+    <div class="setting">
+        <mwc-checkbox id="fromDateCheckbox" on-click="${e => this.updateFromDate(e)}"></mwc-checkbox>
+        <input type="date" id="fromDate" on-change="${e => this.updateFromDate(e)}">
+        <label style="margin-left: 10px;">From date</label>
+    </div>
+    <div class="setting">
+        <mwc-checkbox id="toDateCheckbox" on-click="${e => this.updateToDate(e)}"></mwc-checkbox>
+        <input type="date" id="toDate" on-change="${e => this.updateToDate(e)}">
+        <label style="margin-left: 10px;">To date</label>
+    </div>
 </div>
 `
   }
@@ -79,20 +94,22 @@ hr {
   constructor() {
     super()
     this.showAdvanced = false
+    this.preventJumps = false
   }
 
   static get properties() {
     return {
       _settings: Object,
       _dataCached: Boolean,
-      showAdvanced: Boolean
+      showAdvanced: Boolean,
+      preventJumps: Boolean
     }
   }
 
   _stateChanged(state) {
     this._settings = state.settings
     this._dataCached = state.app.dataCached
-  }
+    }
 
   _didRender(properties, changeList) {
     if ('_settings' in changeList) {
@@ -134,6 +151,26 @@ hr {
 
   toggleAdvanced(e) {
     this.showAdvanced = !this.showAdvanced
+  }
+
+  updateFromDate(e) {
+    let checkbox = this._root.getElementById('fromDateCheckbox')
+    let dateField = this._root.getElementById('fromDate')
+    let checked = checkbox.checked
+    if (e.target === checkbox) {checked = !e.target.checked}
+    store.dispatch(updateFromDate(checked, dateField.value))
+  }
+
+  updateToDate(e) {
+    let checkbox = this._root.getElementById('toDateCheckbox')
+    let dateField = this._root.getElementById('toDate')
+    let checked = checkbox.checked
+    if (e.target === checkbox) {checked = !e.target.checked}
+    store.dispatch(updateToDate(checked, dateField.value))
+  }
+
+  updatePreventJumps() {
+
   }
 
 }

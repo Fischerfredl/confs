@@ -16,11 +16,11 @@ const settings = (state = {}, action) => {
     case SET_COUNTRIES:
       return { ...state, countries: action.countries }
     case SET_FROM_DATE:
-      return { ...state, fromDate: action.fromDate }
+      return { ...state, fromDate: action.date }
     case DEL_FROM_DATE:
       return { ...state, fromDate: undefined }
     case SET_TO_DATE:
-      return { ...state, toDate: action.toDate }
+      return { ...state, toDate: action.date }
     case DEL_TO_DATE:
       return { ...state, toDate: undefined }
     case SET_EXCLUDE_PAST:
