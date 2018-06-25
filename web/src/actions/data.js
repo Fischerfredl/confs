@@ -18,5 +18,6 @@ export const getData = () => (dispatch, getState) => {
 }
 
 export const filterData = () => (dispatch, getState) => {
-  dispatch({ data: filterConfs(JSON.parse(window.sessionStorage.getItem('confs')), getState().settings), type: RECEIVE_DATA})
+  let data = JSON.parse(window.sessionStorage.getItem('confs')) || []
+  dispatch({ data: filterConfs(data, getState().settings), type: RECEIVE_DATA})
 }
