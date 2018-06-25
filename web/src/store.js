@@ -16,8 +16,8 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose
 
 
 const initialState = {
+  app: {},
   data: [],
-  metadata: { topics: [], countries: []},
   settings: {}
 }
 

@@ -49,39 +49,28 @@ class PanelSettings extends connect(store)(LitElement) {
     
 </div>
 <div class="setting">
-    <mwc-checkbox on-click="${e => this.updateExcludePast(e)}"></mwc-checkbox>
+    <mwc-checkbox on-click="${e => store.dispatch(updateExcludePast(!e.target.checked))}"></mwc-checkbox>
     <label>Exclude past conferences</label>
 </div>
 `
   }
 
-  _firstRendered() {
-    store.dispatch(getData())
-  }
-
   static get properties() {
     return {
       _settings: Object,
-      _metadata: Object,
-      topicList: Array,
-      countryList: Array
+      _dataCached: Boolean
     }
   }
 
   _stateChanged(state) {
     this._settings = state.settings
-
-
+    this._dataCached = state.app.dataCached
   }
 
   _didRender(properties, changeList) {
     if ('_settings' in changeList) {
       store.dispatch(filterData())
     }
-  }
-
-  updateExcludePast(e) {
-    store.dispatch(updateExcludePast(!e.target.checked))
   }
 
 

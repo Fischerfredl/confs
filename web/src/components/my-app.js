@@ -11,6 +11,7 @@ import './panel-settings'
 import './panel-table'
 import './panel-ical'
 import './view-header'
+import { getData } from '../actions/data'
 
 class MyApp extends connect(store)(LitElement) {
   _render() {
@@ -99,6 +100,7 @@ panel-table { grid-area: table }
 
   _firstRendered() {
     installOfflineWatcher((offline) => { store.dispatch(updateOffline(offline)) })
+    store.dispatch(getData())
   }
 
   _stateChanged(state) {

@@ -1,9 +1,10 @@
 export const REQUEST_DATA = 'REQUEST_DATA'
 export const RECEIVE_DATA = 'RECEIVE_DATA'
 
+import { UPDATE_DATA_CACHED } from './app'
+
 import queryString from '../lib/queryString.js'
 import filterConfs from '../lib/filterConfs.js'
-
 
 export const getData = () => (dispatch, getState) => {
   dispatch({ data: {}, type: REQUEST_DATA })
@@ -13,6 +14,7 @@ export const getData = () => (dispatch, getState) => {
     .then(data => {
       dispatch({ data, type: RECEIVE_DATA })
       window.sessionStorage.setItem('confs', JSON.stringify(data))
+      dispatch({ type: UPDATE_DATA_CACHED, dataCached: true })
     })
     .catch(err => dispatch({ data: [], type: RECEIVE_DATA }))
 }

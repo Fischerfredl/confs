@@ -1,4 +1,4 @@
-import { UPDATE_OFFLINE, UPDATE_AUTOZOOM } from '../actions/app.js'
+import { UPDATE_OFFLINE, UPDATE_AUTOZOOM, UPDATE_DATA_CACHED } from '../actions/app.js'
 
 const app = (state = {}, action) => {
   switch (action.type) {
@@ -11,6 +11,11 @@ const app = (state = {}, action) => {
       return {
         ...state,
         autozoom: action.autozoom
+      }
+    case UPDATE_DATA_CACHED:
+      return {
+        ...state,
+        dataCached: action.dataCached
       }
     default:
       return state
