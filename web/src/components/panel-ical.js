@@ -3,7 +3,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store.js'
 
-import queryString from '../lib/query_string.js'
+import queryString from '../lib/queryString.js'
 
 class PanelIcal extends connect(store)(LitElement) {
   _render({ query }) {

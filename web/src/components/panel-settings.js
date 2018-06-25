@@ -1,17 +1,20 @@
 import { LitElement, html } from '@polymer/lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
+import '@material/mwc-checkbox'
 
 import { store } from '../store.js'
+import { updateAutozoom } from '../actions/app.js'
 import { setTopics, setCountries, updateExcludePast } from '../actions/settings.js'
-import { getData } from '../actions/data'
+import { getData, filterData } from '../actions/data'
 
 import './settings-topics.js'
 import './settings-countries.js'
 
-import queryString from '../lib/query_string.js'
+import filterConfs from '../lib/filterConfs.js'
+import unique from '../lib/uniqueList.js'
 
 class PanelSettings extends connect(store)(LitElement) {
-  _render({_settings, topicList, countryList}) {
+  _render({_settings}) {
     return html`
 <style>
 :host {
@@ -27,7 +30,7 @@ class PanelSettings extends connect(store)(LitElement) {
     flex: 1;
 }
 
-.exclude-past {
+.setting {
     display: flex;
     align-items: center;
     margin: 20px 0;
@@ -35,22 +38,25 @@ class PanelSettings extends connect(store)(LitElement) {
 
 </style>
 
+<div class="setting">
+    <mwc-checkbox on-click="${e => store.dispatch(updateAutozoom(!e.target.checked))}"></mwc-checkbox>
+    <label>Automatically pan map to markers</label>
+</div>
+
 <div class="flex">
-    <settings-topics topics="${topicList}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
-    <settings-countries countries="${countryList}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
+    <settings-topics topics="${this.getTopicList()}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
+    <settings-countries countries="${this.getCountryList()}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
     
 </div>
-<div class="exclude-past">
+<div class="setting">
     <mwc-checkbox on-click="${e => this.updateExcludePast(e)}"></mwc-checkbox>
     <label>Exclude past conferences</label>
 </div>
 `
   }
 
-  constructor() {
-    super()
-    this.countryList = []
-    this.topicList = []
+  _firstRendered() {
+    store.dispatch(getData())
   }
 
   static get properties() {
@@ -64,15 +70,13 @@ class PanelSettings extends connect(store)(LitElement) {
 
   _stateChanged(state) {
     this._settings = state.settings
-    this._metadata = state.metadata
 
-    this.updateTopics(state.metadata.topics)
-    this.updateCountries(state.metadata.countries)
+
   }
 
   _didRender(properties, changeList) {
     if ('_settings' in changeList) {
-      store.dispatch(getData())
+      store.dispatch(filterData())
     }
   }
 
@@ -81,29 +85,35 @@ class PanelSettings extends connect(store)(LitElement) {
   }
 
 
-  updateTopics(topics) {
-    const fetch_topic = (topic) => {
-      return fetch('https://confs.muperfredi.de/query' + queryString({...this._settings, topics: [topic]}), {method: 'HEAD'})
-        .then(res => res.headers.get('X-Total-Count'))
-        .then(num => { return { topic, num } })
-        .catch((err) => { return { topic } })
+  getTopicList() {
+    let data = JSON.parse(window.sessionStorage.getItem('confs')) || []
+    let topics = unique(data.map(conf => conf.topic))
+    let topicList = []
+
+    for(let key in topics) {
+      let topic = topics[key]
+      topicList.push({
+        topic,
+        num: filterConfs(data, { ...this._settings, topics: [topic] }).length
+      })
     }
-
-    Promise.all(topics.map(topic => fetch_topic(topic)))
-      .then(topicList => { this.topicList = topicList })
-
+    return topicList
   }
 
-  updateCountries(countries) {
-    const fetch_topic = (country) => {
-      return fetch('https://confs.muperfredi.de/query' + queryString({...this._settings, countries: [country]}), {method: 'HEAD'})
-        .then(res => res.headers.get('X-Total-Count'))
-        .then(num => { return { country, num: Number(num) } })
-        .catch((err) => { return { country } })
-    }
+  getCountryList() {
+    let data = JSON.parse(window.sessionStorage.getItem('confs')) || []
+    let countries = unique(data.map(conf => conf.country))
+    let countryList = []
 
-    Promise.all(countries.map(country => fetch_topic(country)))
-      .then(countryList => { this.countryList = countryList})
+    for(let key in countries) {
+      let country = countries[key]
+
+      countryList.push({
+        country,
+        num: filterConfs(data, { ...this._settings, countries: [country]}).length
+      })
+    }
+    return countryList
   }
 
 

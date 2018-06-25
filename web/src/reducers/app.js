@@ -1,4 +1,4 @@
-import { UPDATE_OFFLINE } from '../actions/app.js'
+import { UPDATE_OFFLINE, UPDATE_AUTOZOOM } from '../actions/app.js'
 
 const app = (state = {}, action) => {
   switch (action.type) {
@@ -6,7 +6,12 @@ const app = (state = {}, action) => {
       return {
         ...state,
         offline: action.offline
-      };
+      }
+    case UPDATE_AUTOZOOM:
+      return {
+        ...state,
+        autozoom: action.autozoom
+      }
     default:
       return state
   }

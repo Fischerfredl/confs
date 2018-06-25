@@ -32,9 +32,12 @@ class MapUtils extends connect(store)(LitElement) {
 
 
   refresh(data) {
+    let layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: iconset[conf.topic]}).bindPopup(confToPopup(conf))))
+
     this.markers.clearLayers()
-    const layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: iconset[conf.topic]}).bindPopup(confToPopup(conf))))
     this.markers.addLayer(layer)
+    this.panMap()
+
   }
 
   static get properties() {
@@ -45,6 +48,15 @@ class MapUtils extends connect(store)(LitElement) {
 
   _stateChanged(state){
     this.data = state.data
+    this.autozoom = state.app.autozoom
+
+    this.panMap()
+  }
+
+  panMap() {
+    if (this.autozoom && this.markers.getBounds().isValid()) {
+      this.map.fitBounds(this.markers.getBounds())
+    }
   }
 
 

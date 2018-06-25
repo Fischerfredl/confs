@@ -4,7 +4,6 @@ import { installOfflineWatcher } from 'pwa-helpers/network.js'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store'
-import { fetch_metadata } from '../actions/metadata.js'
 import { updateOffline } from '../actions/app'
 
 import './map-utils'
@@ -100,12 +99,9 @@ panel-table { grid-area: table }
 
   _firstRendered() {
     installOfflineWatcher((offline) => { store.dispatch(updateOffline(offline)) })
-    store.dispatch(fetch_metadata())
-
   }
 
   _stateChanged(state) {
-
   }
 }
 

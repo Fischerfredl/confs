@@ -10,7 +10,6 @@ import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js'
 
 import app from './reducers/app.js'
 import settings from './reducers/settings.js'
-import metadata from './reducers/metadata.js'
 import data from './reducers/data.js'
 
 const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose
@@ -30,6 +29,5 @@ export const store = createStore(
 store.addReducers({
   app,
   settings,
-  metadata,
   data
 })
