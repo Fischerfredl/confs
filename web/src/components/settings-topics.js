@@ -1,7 +1,9 @@
 import { LitElement, html } from '@polymer/lit-element'
 
 import '@material/mwc-checkbox'
+import '@material/mwc-button'
 
+import { SharedStyles } from './shared-styles'
 
 class SettingsTopics extends LitElement {
   _render({ topics, selected, showCount }) {
@@ -17,6 +19,8 @@ class SettingsTopics extends LitElement {
 
     return html`
 <style>
+${SharedStyles}
+
 :host {
     display: block;
     min-width: 140px;
@@ -48,7 +52,7 @@ li:hover {
 
 </style>
 
-<div style="display: flex; align-items: center"><h3 style="flex: 1">Topics</h3><button on-click="${e => {this.selected = []; this.notify() }}">Reset</button></div>
+<h3 style="flex: 1">Topics</h3>
 
 <ul class="topic-list"> 
     ${topics.map((obj, index) => html`
@@ -59,9 +63,10 @@ li:hover {
         </li>
 `)}
 </ul>
-${this.showCount < topics.length ? html`<button on-click="${e => this.showCount += 5}">Show more</button>` : ``}
-${this.showCount > 5 ? html`<button on-click="${e => this.showCount -= 5}">Show less</button>` : ``}
-
+<mwc-button class="w-100" raised onclick="${e => {if(!e.target.disabled){this.showCount += 5}}}" disabled?="${this.showCount >= topics.length}">Show more</mwc-button>
+<mwc-button class="w-100" raised onclick="${e => {if(!e.target.disabled){this.showCount -= 5}}}" disabled?=${this.showCount <= 5}>Show less</mwc-button>
+<hr>
+<mwc-button class="w-100" raised on-click="${e => {this.selected = []; this.notify() }}">Reset</mwc-button>
 ${topics.length === 0 ? `Data not yet available`: ``}
 `
   }

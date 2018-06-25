@@ -15,6 +15,7 @@
     "serve:static": "polymer serve --port 5000 build/es5-bundled"
   },
   "dependencies": {
+    "@material/mwc-button": "^0.1.2",
     "@material/mwc-checkbox": "^0.1.2",
     "@material/mwc-switch": "^0.1.2",
     "@polymer/lit-element": "^0.5.0",

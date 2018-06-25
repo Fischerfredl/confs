@@ -1,10 +1,12 @@
 import { LitElement, html } from '@polymer/lit-element'
 
+import { SharedStyles } from './shared-styles'
+
 class PanelIntro extends LitElement {
   _render({ showIntro }) {
     return html`
 <style>
-
+${SharedStyles}
 :host {
     display: block;
     padding: 15px;

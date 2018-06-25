@@ -2,6 +2,7 @@ import { LitElement, html } from '@polymer/lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store.js'
+import { SharedStyles } from './shared-styles'
 
 import queryString from '../lib/queryString.js'
 
@@ -9,7 +10,7 @@ class PanelIcal extends connect(store)(LitElement) {
   _render({ query }) {
     return html`
 <style>
-
+${SharedStyles}
 :host {
     display: block;
     padding: 15px;
@@ -24,7 +25,7 @@ class PanelIcal extends connect(store)(LitElement) {
 
 </style>
 
-<h1>Ical link</h1>
+<h2>Ical link</h2>
 
 <div class="content">
     <div class="flex">

@@ -1,11 +1,12 @@
 import { LitElement, html } from '@polymer/lit-element'
 import { connect } from 'pwa-helpers/connect-mixin.js'
 import '@material/mwc-checkbox'
+import '@material/mwc-button'
 
 import { store } from '../store.js'
 import { updateAutozoom } from '../actions/app.js'
 import { setTopics, setCountries, updateExcludePast } from '../actions/settings.js'
-import { getData, filterData } from '../actions/data'
+import { filterData } from '../actions/data'
 
 import './settings-topics.js'
 import './settings-countries.js'
@@ -13,10 +14,14 @@ import './settings-countries.js'
 import filterConfs from '../lib/filterConfs.js'
 import unique from '../lib/uniqueList.js'
 
+import { SharedStyles } from './shared-styles'
+
 class PanelSettings extends connect(store)(LitElement) {
-  _render({_settings}) {
+  _render({showAdvanced}) {
     return html`
 <style>
+${SharedStyles}
+
 :host {
     padding: 15px;
 }
@@ -40,13 +45,13 @@ hr {
     margin: 20px -15px; 
 }
 
+.advanced { display: None; }
+.advanced[active] { display: block; }
+
+
+
 </style>
 <h2>Settings</h2>
-<hr>
-<div class="setting">
-    <mwc-checkbox on-click="${e => store.dispatch(updateAutozoom(!e.target.checked))}"></mwc-checkbox>
-    <label>Automatically pan map to markers</label>
-</div>
 <hr>
 <div class="flex">
     <settings-topics topics="${this.getTopicList()}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
@@ -54,17 +59,33 @@ hr {
     
 </div>
 <hr>
-<div class="setting">
-    <mwc-checkbox on-click="${e => store.dispatch(updateExcludePast(!e.target.checked))}"></mwc-checkbox>
+
+
+<mwc-button class="w-100" raised href="toggle" on-click="${e => this.toggleAdvanced(e)}">${showAdvanced ? `Hide` : `Show`} advanced options</mwc-button>
+    
+<div class="advanced" active?="${showAdvanced === true}">    
+    <div class="setting">
+        <mwc-checkbox on-click="${e => store.dispatch(updateAutozoom(!e.target.checked))}"></mwc-checkbox>
+        <label>Automatically pan map to markers</label>
+    </div>
+    <div class="setting">
+        <mwc-checkbox on-click="${e => store.dispatch(updateExcludePast(!e.target.checked))}"></mwc-checkbox>
     <label>Exclude past conferences</label>
 </div>
+</div>
 `
+  }
+
+  constructor() {
+    super()
+    this.showAdvanced = false
   }
 
   static get properties() {
     return {
       _settings: Object,
-      _dataCached: Boolean
+      _dataCached: Boolean,
+      showAdvanced: Boolean
     }
   }
 
@@ -111,7 +132,9 @@ hr {
     return countryList
   }
 
-
+  toggleAdvanced(e) {
+    this.showAdvanced = !this.showAdvanced
+  }
 
 }
 
