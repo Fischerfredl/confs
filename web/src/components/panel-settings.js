@@ -36,18 +36,24 @@ class PanelSettings extends connect(store)(LitElement) {
     margin: 20px 0;
 }
 
-</style>
+hr {
+    margin: 20px -15px; 
+}
 
+</style>
+<h2>Settings</h2>
+<hr>
 <div class="setting">
     <mwc-checkbox on-click="${e => store.dispatch(updateAutozoom(!e.target.checked))}"></mwc-checkbox>
     <label>Automatically pan map to markers</label>
 </div>
-
+<hr>
 <div class="flex">
     <settings-topics topics="${this.getTopicList()}" on-updateTopics="${e => { store.dispatch(setTopics(e.detail.selected))} }}"></settings-topics>
     <settings-countries countries="${this.getCountryList()}" on-updateCountries="${e => { store.dispatch(setCountries(e.detail.selected))} }}"></settings-countries>
     
 </div>
+<hr>
 <div class="setting">
     <mwc-checkbox on-click="${e => store.dispatch(updateExcludePast(!e.target.checked))}"></mwc-checkbox>
     <label>Exclude past conferences</label>

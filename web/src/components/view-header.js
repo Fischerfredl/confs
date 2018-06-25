@@ -25,7 +25,7 @@ class Viewheader extends connect(store)(LitElement) {
     margin: 0 20px;
 }
 
-.title {
+.main {
     flex: 1;
     
 }
@@ -41,11 +41,25 @@ class Viewheader extends connect(store)(LitElement) {
     margin: 0 20px;
 }
 
+@media only screen and (max-width: 600px) {
+    .title {
+        font-size: 1.3em;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .title {
+        display: None;
+    }
+}
+
+
 </style>
    
 ${logo}
-<h1 class="title">Muperconfs</h1> 
-
+<div class="main">
+    <h1 class="title">Muperconfs</h1> 
+</div>
 <div>Total Count: </div>
 <div class="totalcount">${totalCount}</div>
   

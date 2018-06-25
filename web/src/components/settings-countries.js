@@ -19,7 +19,7 @@ class SettingsCountries extends LitElement {
 <style>
 :host {
     display: block;
-    min-width: 160px;
+    min-width: 140px;
     margin: 0 20px;
 }
 
@@ -49,7 +49,7 @@ li:hover {
 
 </style>
 
-<div style="display: flex; align-items: center"><h2 style="flex: 1">Countries</h2><button on-click="${e => {this.selected = []; this.notify(); }}">Reset</button></div>
+<div style="display: flex; align-items: center"><h3 style="flex: 1">Countries</h3><button on-click="${e => {this.selected = []; this.notify(); }}">Reset</button></div>
 
 
 <ul class="country-list"> 
