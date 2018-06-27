@@ -69,7 +69,7 @@ hr {
         <label>Automatically pan map to markers</label>
     </div>
     <div class="setting">
-        <mwc-checkbofx on-click="${e => this.preventJumps = !e.target.checked}"></mwc-checkbofx>
+        <mwc-checkbox on-click="${e => this.preventJumps = !e.target.checked}"></mwc-checkbox>
         <label>Do not show selected topics/countries on top of list.</label>
     </div>
     <div class="setting">
