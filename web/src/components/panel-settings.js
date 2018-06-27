@@ -18,7 +18,6 @@ import { SharedStyles } from './shared-styles'
 
 class PanelSettings extends connect(store)(LitElement) {
   _render({showAdvanced, preventJumps}) {
-    console.log(preventJumps)
     return html`
 <style>
 ${SharedStyles}
@@ -70,7 +69,7 @@ hr {
         <label>Automatically pan map to markers</label>
     </div>
     <div class="setting">
-        <mwc-checkbox on-click="${e => this.preventJumps = !e.target.checked}"></mwc-checkbox>
+        <mwc-checkbofx on-click="${e => this.preventJumps = !e.target.checked}"></mwc-checkbofx>
         <label>Do not show selected topics/countries on top of list.</label>
     </div>
     <div class="setting">
