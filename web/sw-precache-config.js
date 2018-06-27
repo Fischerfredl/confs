@@ -31,10 +31,6 @@ module.exports = {
       handler: 'fastest'
     },
     {
-      urlPattern: /tile.openstreetmap.org\//,
-      handler: 'cacheFirst'
-    },
-    {
       urlPattern: /\/query/,
       handler: 'fastest'
     }
