@@ -98,7 +98,7 @@ def normalize_confs(confs, topic, year):
             city=conf.get('city', 'no city'))
         conf['id'] = hashlib.sha1(id_string.encode('utf-8')).hexdigest()
         # add coords
-        conf['coords'] = geocode(conf.get('city') or conf.get('country'))
+        conf['coords'] = geocode(conf)
 
     # uniquify list
     data = dict()

@@ -1,6 +1,5 @@
 import logging
 import requests
-import time
 
 from lib.redis_cache import set_cache, get_cache
 
@@ -18,17 +17,24 @@ patches = {
 }
 
 
-def geocode(query):
-    cache_key = f'query-{query}'
+def geocode(conf):
+    city = conf.get('city')
+    country = conf.get('country')
+    if city is None:
+        logging.warning('{}-{}: City is none'.format(conf['topic'], conf['year']))
+        city = country
+
+    cache_key = f'query-v2-{country}-{city}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
 
     # fix cases where no results were returned due to typos
-    query = patches.get(query) or query
+    city = patches.get(city) or city
 
     params = {
-        'q': query,
+        'q': city,
+        'country': country,
         'format': 'json',
         'limit': '1'
     }
@@ -36,11 +42,13 @@ def geocode(query):
     r = requests.get('https://nominatim.openstreetmap.org/search', params=params)
     r.raise_for_status()
 
-    if query is None:
-        print('query was none')
+    if len(r.json()) == 0:
+        params.pop('country')
+        r = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+        r.raise_for_status()
 
     if len(r.json()) == 0:
-        logging.warning('Warning: nothing found for:', query)
+        logging.warning('Warning: nothing found for:', cache_key)
         coords = {
             'lat': '0',
             'lon': '0'
