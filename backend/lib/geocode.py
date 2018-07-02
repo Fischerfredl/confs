@@ -20,11 +20,12 @@ patches = {
 def geocode(conf):
     city = conf.get('city')
     country = conf.get('country')
+
     if city is None:
         logging.warning('{}-{}: City is none'.format(conf['topic'], conf['year']))
         city = country
 
-    cache_key = f'query-v2-{country}-{city}'
+    cache_key = f'query-v2.0-{country}-{city}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
@@ -38,13 +39,17 @@ def geocode(conf):
         'format': 'json',
         'limit': '1'
     }
+    headers = {
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': 'muperconfs by Alfred Melch: https://github.com/Fischerfredl/muperconfs'
+    }
 
-    r = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+    r = requests.get('https://nominatim.openstreetmap.org/search', params=params, headers=headers)
     r.raise_for_status()
 
     if len(r.json()) == 0:
         params.pop('country')
-        r = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+        r = requests.get('https://nominatim.openstreetmap.org/search', params=params, headers=headers)
         r.raise_for_status()
 
     if len(r.json()) == 0:
