@@ -10,7 +10,7 @@ from lib.redis_cache import set_cache, get_cache
 
 def normalize_confs(confs, topic, year):
     # check if cached
-    cache_key = f'processed-{year}-{topic}'
+    cache_key = f'processed-v2.0-{year}-{topic}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
