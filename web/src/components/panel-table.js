@@ -85,8 +85,8 @@ const confToTr = (conf) => {
   return html`
 <tr>
     ${attrToTd(conf, 'taggedName')}  
-    ${attrToTd(conf, 'start')}  
-    ${attrToTd(conf, 'end')}  
+    ${attrToTd(conf, 'startDate')}  
+    ${attrToTd(conf, 'endDate')}  
     ${attrToTd(conf, 'city')}  
     ${attrToTd(conf, 'country')}  
     ${linkToTd(conf, 'url')}  

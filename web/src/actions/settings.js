@@ -6,6 +6,8 @@ export const SET_TO_DATE = 'SET_TO_DATE'
 export const DEL_TO_DATE = 'DEL_TO_DATE'
 export const SET_EXCLUDE_PAST = 'SET_EXCLUDE_PAST'
 export const DEL_EXCLUDE_PAST = 'DEL_EXCLUDE_PAST'
+export const SET_INCLUDE_CFP = 'SET_INCLUDE_CFP'
+export const DEL_INCLUDE_CFP = 'DEL_INCLUDE_CFP'
 
 export const setTopics = (topics) => {
   if (Array.isArray(topics)){
@@ -23,6 +25,10 @@ export const setCountries = (countries) => {
 
 export const updateExcludePast = (exclude_past) => {
   return exclude_past ? { type: SET_EXCLUDE_PAST } :  { type: DEL_EXCLUDE_PAST }
+}
+
+export const updateIncludeCfp = (includeCfp) => {
+  return includeCfp ? { type: SET_INCLUDE_CFP } :  { type: DEL_INCLUDE_CFP }
 }
 
 export const updateFromDate = (enabled, date) => {

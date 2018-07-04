@@ -26,6 +26,10 @@ const queryString = (settings, format='json') => {
     params += 'excludePast=true&'
   }
 
+  if(settings.includeCfp) {
+    params += 'includeCfp=true&'
+  }
+
   params += 'format=' + format
 
   return params

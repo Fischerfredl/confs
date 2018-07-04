@@ -6,7 +6,9 @@ import {
   SET_TO_DATE,
   DEL_TO_DATE,
   SET_EXCLUDE_PAST,
-  DEL_EXCLUDE_PAST } from '../actions/settings.js';
+  DEL_EXCLUDE_PAST,
+  SET_INCLUDE_CFP,
+  DEL_INCLUDE_CFP} from '../actions/settings.js';
 
 
 const settings = (state = {}, action) => {
@@ -27,6 +29,10 @@ const settings = (state = {}, action) => {
       return { ...state, excludePast: true }
     case DEL_EXCLUDE_PAST:
       return { ...state, excludePast: false }
+    case SET_INCLUDE_CFP:
+      return { ...state, includeCfp: true }
+    case DEL_INCLUDE_CFP:
+      return { ...state, includeCfp: false }
     default:
       return state
   }

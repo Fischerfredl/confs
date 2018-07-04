@@ -4,6 +4,8 @@ import { connect } from 'pwa-helpers/connect-mixin.js'
 import { store } from '../store.js'
 import { SharedStyles } from './shared-styles'
 
+import { updateIncludeCfp } from '../actions/settings'
+
 import queryString from '../lib/queryString.js'
 
 class PanelIcal extends connect(store)(LitElement) {
@@ -33,11 +35,16 @@ ${SharedStyles}
         <button on-click="${e => this.copy(e)}">Copy</button>
     </div>
     <div class="flex">
-        <mwc-checkbox disabled></mwc-checkbox>
-        <label>Include cfp (not implemented yet)</label>
+        <mwc-checkbox on-click="${e => store.dispatch(updateIncludeCfp(!e.target.checked))}"></mwc-checkbox>
+        <label>Include cfp</label>
     </div>
 </div>
 `
+  }
+
+  constructor() {
+    super()
+    this.includeCfp = false
   }
 
   static get properties() {
@@ -49,6 +56,7 @@ ${SharedStyles}
 
   _stateChanged(state) {
     this.query = queryString(state.settings, 'ical')
+    this.includeCfp = state.settings.includeCfp
   }
 
   copy() {
