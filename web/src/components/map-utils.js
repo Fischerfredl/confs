@@ -18,8 +18,12 @@ class MapUtils extends connect(store)(LitElement) {
     super()
     this.map = new L.Map('map', {
       center: [0, 20],
-      zoom: 2
+      zoom: 2,
+      scrollWheelZoom: false,
+      dragging: false
     })
+    this.map.once('focus', () => this.map.scrollWheelZoom.enable())
+    this.map.once('focus', () => this.map.dragging.enable())
 
     const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
