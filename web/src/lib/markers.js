@@ -8,8 +8,7 @@ const iconTemplate = {
   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 }
 
-
-export default {
+const markerDict = {
   'android': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-android.png'}),
   'css': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-css.png'}),
   'data': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-data.png'}),
@@ -25,5 +24,10 @@ export default {
   'rust': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-rust.png'}),
   'security': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-security.png'}),
   'tech-comm': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-tech-comm.png'}),
-  'ux': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-ux.png'})
+  'ux': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-ux.png'}),
+  'default': L.icon({...iconTemplate, iconUrl: 'images/marker/marker-default.png'})
 }
+
+const getMarker = (topic) => markerDict[topic] || markerDict.default
+
+export default getMarker

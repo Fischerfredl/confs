@@ -5,7 +5,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js'
 
 import { store } from '../store.js'
 
-import iconset from '../lib/markers.js'
+import getMarker from '../lib/markers.js'
 
 
 class MapUtils extends connect(store)(LitElement) {
@@ -32,7 +32,7 @@ class MapUtils extends connect(store)(LitElement) {
 
 
   refresh(data) {
-    let layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: iconset[conf.topic]}).bindPopup(confToPopup(conf))))
+    let layer = L.layerGroup(data.map((conf) => L.marker(conf.coords, {icon: getMarker(conf.topic)}).bindPopup(confToPopup(conf))))
 
     this.markers.clearLayers()
     this.markers.addLayer(layer)
