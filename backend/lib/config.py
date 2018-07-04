@@ -5,6 +5,7 @@ topics = {
     'css': dict(name='CSS', tag='[CSS]'),
     'data': dict(name='Data/AI', tag='[Data]'),
     'devops': dict(name='DevOps', tag='[DevOps]'),
+    'dotnet': dict(name='.NET', tag='[.NET]'),
     'elixir': dict(name='Elixir', tag='[Elixir]'),
     'general': dict(name='General', tag='[General]'),
     'golang':dict(name='Golang', tag='[Go]'),
@@ -14,6 +15,7 @@ topics = {
     'python': dict(name='Python', tag='[Python]'),
     'ruby': dict(name='Ruby', tag='[Ruby]'),
     'rust': dict(name='Rust', tag='[Rust]'),
+    'scala': dict(name='Scala', tag='[Scala]'),
     'security': dict(name='Security', tag='[Security]'),
     'tech-comm': dict(name='Technical communication', tag='[Techcomm]'),
     'ux': dict(name='Design/UX', tag='[UX]')
