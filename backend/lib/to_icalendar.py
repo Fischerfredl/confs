@@ -14,6 +14,8 @@ def to_ics(confs):
     cal = Calendar()
     cal.add('version', '2.0')
     cal.add('prodid', 'confs.muperfredi.de')
+    cal.add('X-WR-CALNAME', 'Conferences')
+    cal.add('X-WR-CALDESC', 'Your personal conference feed. From confs.muperfredi.de made by Alfred Melch')
 
     for conf in confs:
         env = Event()
