@@ -14,6 +14,7 @@ patches = {
     'Edimburgh': 'Edinburgh',
     'Tonronto': 'Toronto',
     'Dornbirn & Lech': 'Dornbirn',
+    'Amsterdam, Th': 'Amsterdam'
 }
 
 

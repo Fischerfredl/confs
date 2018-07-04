@@ -27,4 +27,4 @@ redis_port = int(os.environ.get('REDIS_PORT', 6379))
 
 request_cache = 60
 fetch_cache = 14400
-processed_cache = 300
+processed_cache = 1800
