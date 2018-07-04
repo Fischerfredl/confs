@@ -28,6 +28,7 @@ ${SharedStyles}
 </style>
 
 <h2>Ical link</h2>
+<p>Copy and paste this link to your calendar app.</p>
 
 <div class="content">
     <div class="flex">
