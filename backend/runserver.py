@@ -13,6 +13,7 @@ from lib.config import topics, min_year, max_year, request_cache
 from lib.filter_data import filter_bbox, filter_country, filter_past, filter_from_date, filter_to_date
 from lib import get_confs, to_ics, to_geojson
 from lib.redis_cache import get_cache, set_cache
+from lib.calendar_name import calendar_name
 
 
 app = Flask(__name__)
@@ -64,7 +65,8 @@ def query():
     resp_obj = None
 
     if req_format == 'ical':
-        resp_obj = dict(content=to_ics(confs), mimetype='text/calendar', num_items=len(confs))
+        cal_name = calendar_name(request.args.get('topics'), request.args.get('country'))
+        resp_obj = dict(content=to_ics(confs, cal_name), mimetype='text/calendar', num_items=len(confs))
     elif req_format == 'geojson':
         resp_obj = dict(content=to_geojson(confs), mimetype='application/geo+json', num_items=len(confs))
     elif req_format == 'json':
