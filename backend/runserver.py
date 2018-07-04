@@ -66,7 +66,7 @@ def query():
 
     if req_format == 'ical':
         cal_name = calendar_name(request.args.get('topics'), request.args.get('country'))
-        resp_obj = dict(content=to_ics(confs, cal_name), mimetype='text/calendar', num_items=len(confs))
+        resp_obj = dict(content=to_ics(confs, cal_name, request.args.get('includeCfp') == 'true'), mimetype='text/calendar', num_items=len(confs))
     elif req_format == 'geojson':
         resp_obj = dict(content=to_geojson(confs), mimetype='application/geo+json', num_items=len(confs))
     elif req_format == 'json':
