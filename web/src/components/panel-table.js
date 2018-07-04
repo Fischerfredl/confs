@@ -14,6 +14,8 @@ ${SharedStyles}
 :host {
     display: block;
     padding: 15px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .table-wrapper {

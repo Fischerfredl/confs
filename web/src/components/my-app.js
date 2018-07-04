@@ -64,11 +64,7 @@ panel-intro { grid-area: intro }
 panel-settings { grid-area: control-1 }
 panel-ical { grid-area: control-2}
 panel-table { grid-area: table }
-
-::slotted(*) {
-    grid-area: map;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}    
+.map { grid-area: map; overflow: hidden }
 
 #footer { 
     background-color: dimgrey;
@@ -83,7 +79,7 @@ panel-table { grid-area: table }
     <panel-settings></panel-settings>
     <panel-table></panel-table>
     <panel-ical></panel-ical>
-    <slot name="map"></slot>
+    <div class="map"><slot name="map"></slot></div>
 </div>
 
 <map-utils></map-utils>
