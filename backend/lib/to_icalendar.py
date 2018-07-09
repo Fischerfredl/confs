@@ -34,8 +34,8 @@ def to_ics(confs, calendar_name, add_cfp):
         if add_cfp and conf.get('cfpEnd'):
             try:
                 cfp_env = Event()
-                cfp_env.add('dtstart', datetime.datetime.strptime(conf.get('cfpEnd'), '%Y-%m-%d').date())
-                cfp_env.add('dtend', datetime.datetime.strptime(conf.get('cfpEnd'), '%Y-%m-%d').date())
+                cfp_env.add('dtstart', datetime.datetime.strptime(conf.get('cfpEndDate'), '%Y-%m-%d').date())
+                cfp_env.add('dtend', datetime.datetime.strptime(conf.get('cfpEndDate'), '%Y-%m-%d').date())
                 cfp_env.add('uid', 'cfp-' + conf['id'])
                 cfp_env.add('dtstamp', timestamp)
                 cfp_env.add('summary', '[CFP]' + conf['taggedName'])
