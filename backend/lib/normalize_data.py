@@ -31,7 +31,7 @@ def check_conf(conf, identifier):
 
 def normalize_confs(confs, topic, year):
     # check if cached
-    cache_key = f'processed-v2.0-{year}-{topic}'
+    cache_key = f'processed-v2.1-{year}-{topic}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
