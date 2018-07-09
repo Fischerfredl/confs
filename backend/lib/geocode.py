@@ -12,12 +12,14 @@ patches = {
 }
 
 
-def nominatim_geocode(query):
+def nominatim_geocode(query, only_cities=False):
     params = {
         'q': query,
         'format': 'json',
         'limit': '1'
     }
+    if only_cities:
+        params['featuretype'] = 'city'
     headers = {
         'Accept-Language': 'en-US,en;q=0.9'
     }
@@ -32,7 +34,7 @@ def geocode_conference(conf):
     city = conf.get('city')
     country = conf.get('country')
 
-    cache_key = f'query-v3.0-{country}-{city}'
+    cache_key = f'query-v3.1-{country}-{city}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
@@ -41,9 +43,13 @@ def geocode_conference(conf):
     city = patches.get(city) or city
 
     # try geocoding
-    data = nominatim_geocode(city + ', ' + country)
+    data = nominatim_geocode(city + ', ' + country, only_cities=True)
     if len(data) == 0:
-        data = nominatim_geocode(city)
+        data = nominatim_geocode(city, only_cities=True)
+    if len(data) == 0:
+        data = nominatim_geocode(city + ', ' + country, only_cities=False)
+    if len(data) == 0:
+        data = nominatim_geocode(city, only_cities=False)
 
     if len(data) == 0:
         # failed
