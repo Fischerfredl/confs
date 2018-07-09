@@ -8,7 +8,8 @@ patches = {
     'Johannesburg, Sout': 'Johannisburg',
     'Sydney, Melbourne, Brisbane': 'Sydney',
     'Clear Water, Florida': 'Clear Water',
-    'Dornbirn & Lech': 'Dornbirn'
+    'Dornbirn & Lech': 'Dornbirn',
+    'Amsterdam, Th': 'Amsterdam'
 }
 
 
