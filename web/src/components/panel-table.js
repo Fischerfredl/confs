@@ -90,8 +90,8 @@ const confToTr = (conf) => {
     ${attrToTd(conf, 'city')}  
     ${attrToTd(conf, 'country')}  
     ${linkToTd(conf, 'url')}  
-    ${attrToTd(conf, 'cfpStart')}  
-    ${attrToTd(conf, 'cfpEnd')}  
+    ${attrToTd(conf, 'cfpStartDate')}
+    ${attrToTd(conf, 'cfpEndDate')}
     ${linkToTd(conf, 'cfpUrl')}  
 </tr>`
 }
