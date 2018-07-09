@@ -1,4 +1,5 @@
 import os
+import datetime
 
 topics = {
     'android': dict(name='Android', tag='[Android]'),
@@ -7,6 +8,7 @@ topics = {
     'devops': dict(name='DevOps', tag='[DevOps]'),
     'dotnet': dict(name='.NET', tag='[.NET]'),
     'elixir': dict(name='Elixir', tag='[Elixir]'),
+    'graphql': dict(name='GraphQL', tag='[GraphQL]'),
     'general': dict(name='General', tag='[General]'),
     'golang':dict(name='Golang', tag='[Go]'),
     'ios': dict(name='iOS/Swift', tag='[iOS]'),
@@ -22,11 +24,11 @@ topics = {
 }
 
 min_year = 2014
-max_year = 2025
+max_year = datetime.datetime.utcnow().year + 1
 
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
 redis_port = int(os.environ.get('REDIS_PORT', 6379))
 
-request_cache = 60
-fetch_cache = 14400
-processed_cache = 1800
+request_cache = 300  # 5 min
+processed_cache = 1800  # 30 min
+fetch_cache = 14400  # 4 hours

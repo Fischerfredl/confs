@@ -6,27 +6,33 @@ from lib.redis_cache import set_cache, get_cache
 
 patches = {
     'Johannesburg, Sout': 'Johannisburg',
-    'Seoul, Sout': 'Seoul',
-    'Prague, Czec': 'Prague',
     'Sydney, Melbourne, Brisbane': 'Sydney',
     'Clear Water, Florida': 'Clear Water',
-    'Cincinatti, OH': 'Cincinatti',
-    'Edimburgh': 'Edinburgh',
-    'Tonronto': 'Toronto',
-    'Dornbirn & Lech': 'Dornbirn',
-    'Amsterdam, Th': 'Amsterdam'
+    'Dornbirn & Lech': 'Dornbirn'
 }
 
 
-def geocode(conf):
+def nominatim_geocode(query):
+    params = {
+        'q': query,
+        'format': 'json',
+        'limit': '1'
+    }
+    headers = {
+        'Accept-Language': 'en-US,en;q=0.9'
+    }
+
+    r = requests.get('https://nominatim.openstreetmap.org/search', params=params, headers=headers)
+    r.raise_for_status()
+
+    return r.json()
+
+
+def geocode_conference(conf):
     city = conf.get('city')
     country = conf.get('country')
 
-    if city is None:
-        logging.warning('{}-{}: City is none'.format(conf['topic'], conf['year']))
-        city = country
-
-    cache_key = f'query-v2.0-{country}-{city}'
+    cache_key = f'query-v3.0-{country}-{city}'
     cached = get_cache(cache_key)
     if cached is not None:
         return cached
@@ -34,37 +40,28 @@ def geocode(conf):
     # fix cases where no results were returned due to typos
     city = patches.get(city) or city
 
-    params = {
-        'q': city,
-        'country': country,
-        'format': 'json',
-        'limit': '1'
-    }
-    headers = {
-        'Accept-Language': 'en-US,en;q=0.9',
-        'User-Agent': 'muperconfs by Alfred Melch: https://github.com/Fischerfredl/muperconfs'
-    }
+    # try geocoding
+    data = nominatim_geocode(city + ', ' + country)
+    if len(data) == 0:
+        data = nominatim_geocode(city)
 
-    r = requests.get('https://nominatim.openstreetmap.org/search', params=params, headers=headers)
-    r.raise_for_status()
-
-    if len(r.json()) == 0:
-        params.pop('country')
-        r = requests.get('https://nominatim.openstreetmap.org/search', params=params, headers=headers)
-        r.raise_for_status()
-
-    if len(r.json()) == 0:
-        logging.warning('Warning: nothing found for:', cache_key)
+    if len(data) == 0:
+        # failed
+        logging.warning('{}-{}: Geocoding failed for: {}. Location: {}'
+                        .format(conf['year'], conf['topic'], conf['name'], cache_key))
         coords = {
             'lat': '0',
             'lon': '0'
         }
+        # do not set cache
+        return coords
+
     else:
+        # success
         coords = {
-            'lat': r.json()[0]['lat'],
-            'lon': r.json()[0]['lon']
+            'lat': data[0]['lat'],
+            'lon': data[0]['lon']
         }
 
-    set_cache(cache_key, coords)
-
-    return coords
+        set_cache(cache_key, coords)
+        return coords
