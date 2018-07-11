@@ -4,7 +4,7 @@ This is a university project. The assignment was to visualize geodata. The data 
 
 # Overview
 
-This project is split in four services: 
+This project is split in five services: 
 - Backend: Python flask server to aggregate and filter data
 - Frontend: Polymer PWA
 - Cache: redis
