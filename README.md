@@ -9,10 +9,12 @@ This project is split in four services:
 - Frontend: Polymer PWA
 - Cache: redis
 - Reverse proxy: nginx
-
-todo: ping-service to keep cache fresh
+- Ping-service: keep cache fresh
 
 Each service gets built as a docker container. Use `docker-compose up` to spin up the configured app.
+
+
+![overview-schema](https://user-images.githubusercontent.com/2673788/42551280-c3ac85ce-84d6-11e8-8f4b-3ac042c2946f.jpg)
 
 # Rev proxy
 
@@ -27,35 +29,111 @@ The backend service gathers all data. It can filter the dataset by parameters an
     
 ## Parameters
 
+### Query parameters
+
 `topics=<topic>[,<topic>][,<topic>]...`: 
+
+limit the query to specific topics. All topics are given if not present.
         
 `startYear=<int>`
 
 `endYear=<int>`
 
+Limits the query to specific years given as integer value. This option is given since the data source is structured by year.
+
+`fromDate=YYYY-MM-DD`
+
+`toDate=YYYY-MM-DD`
+
+Limit the query by dates.
+
+`excludePast=[true|false]`
+
+Exclude conferences which endDate lies in the past. 
+
 `country=<country>[,<country>][,<country>],...`
+
+Limit the query to specific countries.
 
 `bbox=<x1>,<y1>,<x2>,<y2>`
 
+Limit the query by bounding box.
+
+### Output parameters
+
 `format=[json|ical|geojson]`
 
-todo: `include_cfp` to include cfp dates in ical
+`includeCfp=[true|false]`
+
+Only if format is `ical`. By default cfp is not included in ical representation.
 
 ## topics and countries
 
 Send a request to `https://confs.muperfredi.de/query/meta` to get a list of possible countries or topics to use.
 
+## Data source 
 
-## The code
+The data is stored in [this](https://github.com/tech-conferences/confs.tech) GitHub repo. The conferences are structured by `<year>/<topic>.json` files.
 
-Python [Flask](http://flask.pocoo.org/) is used for this service. The app is defined in `runserver.py`. Flask-CORS takes care of CORS headers to make cross origin requests possible. The server will always respond with a valid json response if no other format is requested.
+Original Schema
 
-todo: describe lib
+```json
+  {
+    "name": "",
+    "url": "",
+    "startDate": "YYYY-MM-DD",
+    "endDate": "YYYY-MM-DD",
+    "city": "",
+    "country": "",
+    "cfpUrl": "",
+    "cfpEndDate": "",
+    "twitter": ""
+  }
+```
+
+I add some fields to get the following muperconfs schema. The data can now be retrieved as a single list of all conferences:
+
+```json
+  {
+    "name": "",
+    "url": "",
+    "startDate": "YYYY-MM-DD",
+    "endDate": "YYYY-MM-DD",
+    "city": "",
+    "country": "",
+    "cfpUrl": "",
+    "cfpEndDate": "",
+    "twitter": "",
+    "id": "<SHA1 hash of {year}|{topic}|{name}|{date}|{city}>",
+    "year": 2014,
+    "topic": "",
+    "topicFullname": "",
+    "taggedName": "[Topic] Name",
+    "coords": {"lat": 0, "lon": 0}
+  }
+```
+
+## API usage
+
+Flask-CORS takes care of CORS headers to make cross origin requests possible. The server will always respond with a valid json response if no other format is requested. X-Total-Count is a custom header added to describe the amount of conferences returned. This is useful for HEADER-requests.
+
 
 # The cache
 
-...
+There are four types of cached resources. The resources are stored as stringified json:
+
+* geocoding: Geolocation for geocoded city names will be cached indefinitely
+* data source: requests to the confs.tech repository will be cached by year and topic for 4 hours
+* processing: The data processing described above will be cached by year and topic for 30 minutes
+* requests: Every request gets cached for 5 minutes. The key is a sha1 hash of the query string.
+
 
 # Frontend
 
-...
+Technologies used:
+* [Lit-Element](https://github.com/Polymer/lit-element) - WebComponents
+* [PWA-starter-kit](https://github.com/Polymer/pwa-starter-kit) - Service Worker (Polymer CLI), PRPL-server 
+* [redux](https://redux.js.org/) - state management
+* [Leaflet](https://leafletjs.com/reference-1.3.0.html) - MAP API
+
+Since all assets are cached, the PWA is usable with no network connection. The list of all conferences is stored in session storage on page request. All filtering is done on the frontend to save network requests.
