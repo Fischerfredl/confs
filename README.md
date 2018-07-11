@@ -33,7 +33,7 @@ The backend service gathers all data. It can filter the dataset by parameters an
 
 `topics=<topic>[,<topic>][,<topic>]...`: 
 
-limit the query to specific topics. All topics are given if not present.
+Limit the query to specific topics.
         
 `startYear=<int>`
 
