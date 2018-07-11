@@ -5,11 +5,15 @@ from lib.redis_cache import set_cache, get_cache
 
 
 patches = {
+    # javascript confs
     'Johannesburg, Sout': 'Johannisburg',
     'Sydney, Melbourne, Brisbane': 'Sydney',
     'Clear Water, Florida': 'Clear Water',
     'Dornbirn & Lech': 'Dornbirn',
-    'Amsterdam, Th': 'Amsterdam'
+    'Amsterdam, Th': 'Amsterdam',
+    # better geocoding
+    'Portland': 'Portland, OR',
+    'Las Vegas': 'Las Vegas, NV'
 }
 
 
