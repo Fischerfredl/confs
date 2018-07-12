@@ -83,7 +83,7 @@ panel-table { grid-area: table }
 </div>
 
 <map-utils></map-utils>
-<div id="footer">Made by Alfred Melch</div>
+<div id="footer">Made by Alfred Melch. Datasource: <a href="https://confs.tech/">confs.tech</a></div>
     
     `
   }
