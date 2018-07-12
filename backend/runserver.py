@@ -10,7 +10,7 @@ from flask_cors import CORS
 from flask_json_errorhandler import init_errorhandler
 
 from lib.config import topics, min_year, max_year, request_cache
-from lib.filter_data import filter_bbox, filter_country, filter_past, filter_from_date, filter_to_date
+from lib.filter_data import filter_bbox, filter_countries, filter_past, filter_from_date, filter_to_date
 from lib import get_confs, to_ics, to_geojson
 from lib.redis_cache import get_cache, set_cache
 from lib.calendar_name import calendar_name
@@ -37,9 +37,9 @@ def query():
     try:
         confs = get_confs(request.args.get('topics'), request.args.get('startYear'), request.args.get('endYear'))
 
-        # filter by country
-        if request.args.get('country'):
-            confs = filter_country(confs, request.args.get('country'))
+        # filter by countries
+        if request.args.get('countries'):
+            confs = filter_countries(confs, request.args.get('countries'))
 
         # filter by bbox
         if request.args.get('bbox'):
@@ -65,7 +65,7 @@ def query():
     resp_obj = None
 
     if req_format == 'ical':
-        cal_name = calendar_name(request.args.get('topics'), request.args.get('country'))
+        cal_name = calendar_name(request.args.get('topics'), request.args.get('countries'))
         resp_obj = dict(content=to_ics(confs, cal_name, request.args.get('includeCfp') == 'true'), mimetype='text/calendar', num_items=len(confs))
     elif req_format == 'geojson':
         resp_obj = dict(content=to_geojson(confs), mimetype='application/geo+json', num_items=len(confs))

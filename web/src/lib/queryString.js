@@ -11,7 +11,7 @@ const queryString = (settings, format='json') => {
   }
 
   if(settings.countries !== undefined && settings.countries.length !== 0) {
-    params += 'country=' + settings.countries.join(',') + '&'
+    params += 'countries=' + settings.countries.join(',') + '&'
   }
 
   if(settings.fromDate) {

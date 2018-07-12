@@ -51,7 +51,7 @@ Limit the query by dates.
 
 Exclude conferences which endDate lies in the past. 
 
-`country=<country>[,<country>][,<country>],...`
+`countries=<country>[,<country>][,<country>],...`
 
 Limit the query to specific countries.
 
@@ -79,7 +79,7 @@ Send a request to `https://confs.muperfredi.de/query/meta` to get a list of poss
 * https://confs.muperfredi.de/query?topics=python - All python conferences
 * https://confs.muperfredi.de/query?topics=javascript,ruby&excludePast=true - All upcoming javascript and ruby conferences
 * https://confs.muperfredi.de/query?topics=android&fromDate=2018-07-01&toDate=2018-08-01 - All android conferences in July 2018
-* https://confs.muperfredi.de/query?topics=ux,ios&country=Germany,Austria,Switzerland&format=geojson - All ux and ios conferences in DACH countries as geojson
+* https://confs.muperfredi.de/query?topics=ux,ios&countries=Germany,Austria,Switzerland&format=geojson - All ux and ios conferences in DACH countries as geojson
 * https://confs.muperfredi.de/query?bbox=-26.7879539301,34.2493529429,51.5665382574,72.2543892796&format=geojson - All european conferences by bounding box
 * https://confs.muperfredi.de/query?bbox=66.1783546637,-12.1077118784,156.5299171637,54.6333703447&format=ical - A calendar for eastern asian confereces
 

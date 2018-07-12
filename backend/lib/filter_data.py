@@ -1,7 +1,7 @@
 import datetime
 
 
-def filter_country(confs, arg):
+def filter_countries(confs, arg):
     country_list = arg.split(',')
 
     return [conf for conf in confs if conf.get('country') in country_list]
