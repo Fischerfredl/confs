@@ -6,7 +6,7 @@ This is a university project. The assignment was to visualize geodata. The data 
 
 This project is split in five services: 
 - Backend: Python flask server to aggregate and filter data
-- Frontend: Polymer PWA
+- Frontend: PWA
 - Cache: redis
 - Reverse proxy: nginx
 - Ping-service: keep cache fresh
