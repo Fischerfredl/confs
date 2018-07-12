@@ -31,7 +31,7 @@ def to_ics(confs, calendar_name, add_cfp):
 
         cal.add_component(env)
 
-        if add_cfp and conf.get('cfpEnd'):
+        if add_cfp and conf.get('cfpEndDate'):
             try:
                 cfp_env = Event()
                 cfp_env.add('dtstart', datetime.datetime.strptime(conf.get('cfpEndDate'), '%Y-%m-%d').date())
