@@ -64,16 +64,12 @@ def fetch(topic, year):
     if cached is not None:
         return cached
 
-    # fetch from api
-    src = 'https://raw.githubusercontent.com/tech-conferences/confs.tech/master/conferences/{year}/{topic}.json'
-    # Hack: javascript confs are stored in a different repo
-    if topic == 'javascript':
-        src = 'https://raw.githubusercontent.com/tech-conferences/javascript-conferences/master/conferences/{year}/{topic}.json'
-
     if topic not in list(topics.keys()):
         return []
 
-    r = requests.get(src.format(topic=topic, year=year))
+    # fetch from api
+    src = f'https://raw.githubusercontent.com/tech-conferences/conference-data/master/conferences/{year}/{topic}.json'
+    r = requests.get(src)
     try:
         r.raise_for_status()
         confs = r.json()
